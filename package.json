@@ -11,6 +11,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "build": "shadow-cljs compile lib",
     "lint": "npx eslint *.js lib/*.js",
     "shins": "node widdershins --discovery -o ../shins/source/index.html.md defs/petstore.json",
     "test": "node $nflags node_modules/mocha/bin/_mocha"
@@ -50,6 +51,7 @@
     "openapi-sampler": "^1.0.0-beta.15",
     "reftools": "^1.0.8",
     "safe-json-stringify": "^1.2.0",
+    "shadow-cljs": "^2.8.64",
     "swagger2openapi": "^5.3.1",
     "urijs": "^1.19.0",
     "yaml": "^1.7.0",

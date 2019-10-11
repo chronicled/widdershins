@@ -1,0 +1,11 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src"]
+
+ :dependencies
+ []
+
+ :builds
+ {:lib
+  {:target :npm-module
+   :output-dir "lib/cljs"}}}
