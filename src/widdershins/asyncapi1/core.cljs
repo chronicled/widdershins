@@ -12,16 +12,21 @@
   (let [pubsub (cond-> []
                  (some? publish) (conj (assoc publish ::mode :publish))
                  (some? subscribe) (conj (assoc subscribe ::mode :subscribe)))
-        x-exchanges (group-by :x-exchange pubsub)]
-    (->> x-exchanges
-         (map (fn [[x-exchange exchange-messages]]
-                {:topic (str (when (some? x-exchange) (str (name x-exchange) "."))
+        queues (merge (group-by :x-exchange pubsub)
+                      (group-by :x-queue pubsub)
+                      {nil (filter #(and (nil? (:x-exchange %))
+                                         (nil? (:x-queue %)))
+                                   pubsub)})]
+    (->> queues
+         (map (fn [[queue exchange-messages]]
+                {:topic (str (when (some? queue) (str (name queue) "."))
                              (name topic-name))
                  :messages (->> exchange-messages
                                 (map (fn [{mode ::mode :as message}]
                                        {mode (dissoc message ::mode)}))
                            (into {}))
-                 :parameters parameters})))))
+                 :parameters parameters}))
+         (remove #(empty? (:messages %))))))
 
 (defn- convert-topics
   [{:keys [x-exchanges x-queues topics]}]
