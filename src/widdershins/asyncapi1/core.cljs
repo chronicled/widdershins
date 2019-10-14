@@ -5,22 +5,31 @@
 (defn- convert-message
   [message-mode message]
   (when (some? message)
-    (log/debug "convert-message" (str message-mode) (clj->js message))
     {message-mode message}))
 
 (defn- convert-topic
-  [{:keys [parameters publish subscribe] :as topic}]
-  {:messages (merge (convert-message :publish publish)
-                    (convert-message :subscribe subscribe)) 
-   :parameters parameters})
+  [topic-name {:keys [parameters publish subscribe] :as topic}]
+  (let [pubsub (cond-> []
+                 (some? publish) (conj (assoc publish ::mode :publish))
+                 (some? subscribe) (conj (assoc subscribe ::mode :subscribe)))
+        x-exchanges (group-by :x-exchange pubsub)]
+    (->> x-exchanges
+         (map (fn [[x-exchange exchange-messages]]
+                {:topic (str (when (some? x-exchange) (str (name x-exchange) "."))
+                             (name topic-name))
+                 :messages (->> exchange-messages
+                                (map (fn [{mode ::mode :as message}]
+                                       {mode (dissoc message ::mode)}))
+                           (into {}))
+                 :parameters parameters})))))
 
 (defn- convert-topics
   [{:keys [x-exchanges x-queues topics]}]
   (->> topics
-       (map (fn [[topic-name topic]]
-              (when topic [topic-name (convert-topic topic)])))
-       (remove nil?)
-       (into {})))
+       (mapcat (fn [[topic-name topic]]
+                 (convert-topic topic-name topic)))
+       (map (fn [topic] [(:topic topic) topic]))
+       (into (sorted-map-by :topic))))
 
 (defn- convert-section
   [section]
