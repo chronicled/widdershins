@@ -1,8 +1,11 @@
-(ns widdershins.asyncapi1.core)
+(ns widdershins.asyncapi1.core
+  (:require 
+    [shodan.console :as log]))
 
 (defn- convert-message
   [message-mode message]
   (when (some? message)
+    (log/debug "convert-message" (str message-mode) (clj->js message))
     {message-mode message}))
 
 (defn- convert-topic
