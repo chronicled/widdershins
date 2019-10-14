@@ -1,10 +1,10 @@
-{{? (data.topicName === 'streaming' || data.topicName === 'evented') && !data.messageName }}
+{{? (topic.topic === 'streaming' || topic.topic === 'evented') && !topic.topic }}
 {{? data.message["x-widdershins-oldRef"] }}
 {{ data.messageName = data.message["x-widdershins-oldRef"].split('/').pop(); }}
 {{?}}
 {{?}}
 {{= data.tags.section }}
-<h3 id="{{=data.utils.slugify(data.topicName)}}-{{=data.messageName}}">{{=data.messageName}}</h3>
+<h3 id="{{=data.utils.slugify(topic.topic)}}-{{=data.messageName}}">{{=data.messageName}}</h3>
 
 {{? data.message.deprecated}}Note: **Deprecated**{{?}}
 

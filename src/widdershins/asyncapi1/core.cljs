@@ -28,8 +28,7 @@
   (->> topics
        (mapcat (fn [[topic-name topic]]
                  (convert-topic topic-name topic)))
-       (map (fn [topic] [(:topic topic) topic]))
-       (into (sorted-map-by :topic))))
+       (sort-by :topic)))
 
 (defn- convert-section
   [section]
