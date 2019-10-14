@@ -32,7 +32,7 @@
 {{= data.utils.getCodeSamples(data) }}
 {{?}}
 
-{{? data.message.summary}}*{{=data.message.summary}}*{{?}}
+{{? data.message.summary}}<i>{{=data.message.summary}}</i>{{?}}
 
 {{? data.message.description}}{{=data.message.description}}{{?}}
 
