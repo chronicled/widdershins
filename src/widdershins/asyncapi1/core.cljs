@@ -2,11 +2,6 @@
   (:require 
     [shodan.console :as log]))
 
-(defn- convert-message
-  [message-mode message]
-  (when (some? message)
-    {message-mode message}))
-
 (defn- convert-topic
   [topic-name {:keys [parameters publish subscribe] :as topic}]
   (let [pubsub (cond-> []
