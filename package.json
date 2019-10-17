@@ -1,6 +1,6 @@
 {
   "name": "@chronicled/widdershins",
-  "version": "4.0.0-alpha",
+  "version": "4.0.0-alpha.2",
   "description": "OpenAPI/ Swagger / AsyncAPI / Semoasa definition to Slate / Shins compatible markdown",
   "main": "lib/index.js",
   "bin": {
@@ -69,5 +69,9 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "files": [
+    "*",
+    "lib/cljs"
+  ]
 }
