@@ -4,7 +4,7 @@
 {{?}}
 {{?}}
 {{= data.tags.section }}
-<h3 id="{{=data.utils.slugify(topic.topic)}}-{{=data.messageName}}">{{=data.messageName}}</h3>
+<h3 id="{{=data.utils.slugify(topic.slug)}}-{{=data.messageName}}">{{=data.messageName}}</h3>
 
 {{? data.message.deprecated}}Note: **Deprecated**{{?}}
 

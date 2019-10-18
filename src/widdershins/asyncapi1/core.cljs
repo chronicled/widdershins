@@ -3,8 +3,13 @@
     [shodan.console :as log]))
 
 (defn- convert-topic
-  [topic-name {:keys [parameters publish subscribe] :as topic}]
-  (let [pubsub (cond-> []
+  [{section-info :info}
+   {topic-name :key
+    parameters :parameters 
+    publish :publish
+    subscribe :subscribe}]
+  (let [section-hash (hash section-info)
+        pubsub (cond-> []
                  (some? publish) (conj (assoc publish ::mode :publish))
                  (some? subscribe) (conj (assoc subscribe ::mode :subscribe)))
         queues (merge (group-by :x-exchange pubsub)
@@ -14,20 +19,23 @@
                                    pubsub)})]
     (->> queues
          (map (fn [[queue exchange-messages]]
-                {:topic (str (when (some? queue) (str (name queue) "."))
+                (as-> {} topic-ent
+                  (assoc topic-ent
+                         :topic (str (when (some? queue) (str (name queue) "."))
                              (name topic-name))
-                 :messages (->> exchange-messages
+                         :messages (->> exchange-messages
                                 (map (fn [{mode ::mode :as message}]
                                        {mode (dissoc message ::mode)}))
-                           (into {}))
-                 :parameters parameters}))
+                                (into {}))
+                         :parameters parameters)
+                  (assoc topic-ent :slug (str section-hash "-" (:topic topic-ent))))))
          (remove #(empty? (:messages %))))))
 
 (defn- convert-topics
-  [{:keys [x-exchanges x-queues topics]}]
+  [{:keys [x-exchanges x-queues topics] :as section}]
   (->> topics
        (mapcat (fn [[topic-name topic]]
-                 (convert-topic topic-name topic)))
+                 (convert-topic section (assoc topic :key topic-name))))
        (sort-by :topic)))
 
 (defn- convert-section
