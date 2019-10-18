@@ -44,10 +44,10 @@ Base URLs:
 
 {{= data.tags.section }}
 
-## {{=topic.topic}}
+<h2 id="{{=data.utils.slugify(topic.slug)}}">{{=topic.topic}}</h2>
 
 {{? topic.parameters }}
-<h3 id="{{=data.utils.slugify(topic.topic)}}-parameters">Parameters</h3>
+<h3 id="{{=data.utils.slugify(topic.slug)}}-parameters">Parameters</h3>
 
 {{ data.parameters = data.utils.getParameters(topic.parameters); }}
 
